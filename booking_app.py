@@ -214,10 +214,7 @@ if __name__ == "__main__":
     st.header("Provide your booking details:")
     guest_name = st.text_input("Guest Name", placeholder="Enter guest's full name")
     
-    room_type = st.text_input("Room Type (Custom)") or st.selectbox(
-        "Select Room Type",
-        ["Deluxe Suite", "Sea View Studio", "Garden View Double", "Single Room"],
-    )
+    room_type = st.text_input("Room Type (Custom)") 
     
     check_in = st.date_input("Check-in Date", value=datetime.now())
     check_out = st.date_input("Check-out Date", value=datetime.now())
