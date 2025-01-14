@@ -4,7 +4,6 @@ from io import BytesIO
 from datetime import datetime
 
 def generate_pdf(data):
-    # Fresh, elegant CSS design with subtle styling
     html_template = f"""
     <!DOCTYPE html>
     <html>
@@ -29,11 +28,13 @@ def generate_pdf(data):
                 border-radius: 8px;
                 padding: 25px 30px;
             }}
+
+            /* HEADINGS */
             h1 {{
                 font-size: 28px;
                 font-weight: 700;
                 color: #2C3E50;
-                margin-bottom: 6px;
+                margin-bottom: 5px;
                 text-align: center;
                 letter-spacing: 1px;
             }}
@@ -41,32 +42,40 @@ def generate_pdf(data):
                 text-align: center;
                 color: #7F8C8D;
                 font-size: 16px;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
             }}
             h2 {{
                 font-size: 18px;
                 color: #2C3E50;
-                margin: 24px 0 12px;
+                margin: 16px 0 8px; /* tighten spacing */
                 position: relative;
             }}
             h2::after {{
                 content: "";
                 display: block;
-                width: 60px;
-                height: 3px;
+                width: 50px;
+                height: 2px;
                 background-color: #ADCBE3;
-                margin-top: 6px;
+                margin-top: 4px;
             }}
+
+            /* TEXT */
             .welcome-text {{
                 text-align: center;
                 font-size: 16px;
-                margin-bottom: 20px;
+                margin-bottom: 16px;
                 color: #34495E;
             }}
+            .highlight {{
+                color: #3498DB;
+                font-weight: bold;
+            }}
+
+            /* TABLES */
             table {{
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 20px;
+                margin-bottom: 16px;
             }}
             th, td {{
                 border: 1px solid #ECECEC;
@@ -80,44 +89,52 @@ def generate_pdf(data):
                 color: #555;
                 width: 30%;
             }}
+
+            /* NOTE */
             .note {{
-                background-color: #F0F4F8; /* Subtle, blending background */
-                padding: 12px;
-                border-left: 4px solid #3498DB; /* Thin accent on the left */
-                margin: 15px 0;
+                background-color: #F0F4F8; 
+                padding: 8px 10px;
+                border-left: 4px solid #3498DB;
+                margin: 10px 0 15px; 
                 font-size: 14px;
-                color: #555; /* Subtler text color */
+                color: #555; /* blend in more subtly */
             }}
+
+            /* FLEX WRAPPER for CONTACT & BANK sections side by side */
+            .info-sections {{
+                display: flex;
+                flex-wrap: wrap;         /* wraps on smaller screens */
+                gap: 20px;               /* space between columns */
+                align-items: flex-start; /* top-align both sections */
+                margin-bottom: 10px;     /* small gap before footer */
+            }}
+            .info-section {{
+                flex: 1 1 350px;         /* each section at least 350px wide */
+            }}
+
+            /* CONTACT & BANK DETAILS */
+            .contact-details p, 
+            .bank-details p {{
+                margin: 4px 0;
+            }}
+            .bank-details, .contact-details {{
+                background-color: #F4F8FA;
+                border: 1px solid #ECECEC;
+                border-radius: 6px;
+                padding: 10px 12px;
+            }}
+
+            /* FOOTER */
             .footer {{
                 text-align: center;
                 font-size: 12px;
                 color: #999;
-                margin-top: 30px;
+                margin-top: 5px; /* minimal space above footer */
             }}
             .footer p {{
-                margin: 2px 0;
+                margin: 2px 0;  /* keep lines close together */
             }}
-            .highlight {{
-                color: #3498DB;
-                font-weight: bold;
-            }}
-            .bank-details {{
-                background-color: #F4F8FA;
-                padding: 14px;
-                border: 1px solid #ECECEC;
-                border-radius: 6px;
-                margin-top: 10px;
-                font-size: 14px;
-                line-height: 1.4;
-            }}
-            .contact-details {{
-                line-height: 1.4;
-                margin: 8px 0;
-                font-size: 14px;
-            }}
-            .contact-details p {{
-                margin: 4px 0;
-            }}
+
             a {{
                 color: #3498DB;
                 text-decoration: none;
@@ -126,14 +143,17 @@ def generate_pdf(data):
     </head>
     <body>
         <div class="container">
+            <!-- TITLE & SUBHEADER -->
             <h1>Achillion Hotel</h1>
-            <div class="subheader">Booking Confirmation</div>
+        
 
+            <!-- WELCOME TEXT -->
             <p class="welcome-text">
                 <strong>Thank you for choosing <span class="highlight">Achillion Hotel</span>!</strong><br>
                 We look forward to welcoming you soon.
             </p>
 
+            <!-- GUEST DETAILS -->
             <h2>Guest Details</h2>
             <table>
                 <tr>
@@ -150,12 +170,13 @@ def generate_pdf(data):
                 </tr>
             </table>
 
+            <!-- BOOKING DETAILS -->
             <h2>Booking Details</h2>
             <table>
                 <tr>
                     <th>Check-In / Check-Out</th>
                     <td>
-                        {data['check_in']} (15:00 - 23:00) &nbsp;—&nbsp; 
+                        {data['check_in']} (15:00 - 23:00) &nbsp;—&nbsp;
                         {data['check_out']} (08:00 - 11:00)
                     </td>
                 </tr>
@@ -181,34 +202,42 @@ def generate_pdf(data):
                 </tr>
             </table>
 
+            <!-- NOTE -->
             <div class="note">
                 <strong>Note:</strong> Please be informed that parking services are not available at the facility.
             </div>
 
-            <h2>Hotel Contact Details</h2>
-            <div class="contact-details">
-                <p>
-                    <strong>Address:</strong> 6, Nikis Str., Paralia Katerinis, Pieria, Greece<br>
-                    <strong>Coordinates:</strong> 40.267814, 22.596908
-                </p>
-                <p>
-                    <strong>Email:</strong> <a href="mailto:achillion.paralia@gmail.com">achillion.paralia@gmail.com</a><br>
-                    <strong>Phone:</strong> +30 2351061320, +30 6946 552892<br>
-                    <strong>Website:</strong> <a href="http://www.achillion-paralia.gr">www.achillion-paralia.gr</a>
-                </p>
+            <!-- CONTACT & BANK DETAILS SIDE-BY-SIDE -->
+            <div class="info-sections">
+                <!-- Hotel Contact Details -->
+                <div class="info-section">
+                    <h2>Hotel Contact Details</h2>
+                    <div class="contact-details">
+                        <p><strong>Address:</strong> 6, Nikis Str., Paralia Katerinis, Pieria, Greece</p>
+                        <p><strong>Coordinates:</strong> 40.267814, 22.596908</p>
+                        <p><strong>Email:</strong> <a href="mailto:achillion.paralia@gmail.com">achillion.paralia@gmail.com</a></p>
+                        <p><strong>Phone:</strong> +30 2351061320, +30 6946 552892</p>
+                        <p><strong>Website:</strong> <a href="http://www.achillion-paralia.gr">www.achillion-paralia.gr</a></p>
+                    </div>
+                </div>
+
+                <!-- Bank Details -->
+                <div class="info-section">
+                    <h2>Bank Details</h2>
+                    <div class="bank-details">
+                        <p><strong>Bank:</strong> Alpha Bank</p>
+                        <p><strong>IBAN:</strong> GR5601408400840002002023605</p>
+                        <p><strong>BIC:</strong> CRBAGRAA</p>
+                    </div>
+                </div>
             </div>
 
-            <h2>Bank Details</h2>
-            <div class="bank-details">
-                <p><strong>Bank:</strong> Alpha Bank</p>
-                <p><strong>IBAN:</strong> GR5601408400840002002023605</p>
-                <p><strong>BIC:</strong> CRBAGRAA</p>
-            </div>
-
+            <!-- FOOTER -->
             <div class="footer">
                 <p>Confirmed by: <strong>Kampouridis Dimitris</strong>, Hotel Manager</p>
                 <p>© 2025 Achillion Hotel - Apartments. All Rights Reserved.</p>
             </div>
+
         </div>
     </body>
     </html>
@@ -259,7 +288,9 @@ if __name__ == "__main__":
             pdf_buffer = generate_pdf(data)
 
             # Create filename using guest name and dates
-            clean_guest_name = "".join(c for c in guest_name if c.isalnum() or c.isspace()).replace(" ", "_")
+            clean_guest_name = "".join(
+                c for c in guest_name if c.isalnum() or c.isspace()
+            ).replace(" ", "_")
             filename = f"{clean_guest_name}_{check_in.strftime('%d-%m-%Y')}_{check_out.strftime('%d-%m-%Y')}.pdf"
             
             st.download_button(
