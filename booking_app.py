@@ -179,7 +179,7 @@ def generate_pdf(data):
 
             <div class="footer">
                 <p>Confirmed by: <strong>Kampouridis Dimitris</strong>, Hotel Manager</p>
-                <p>© 2025 Achillion Hotel - Apartments. All Rights Reserved.</p>
+         
             </div>
         </div>
     </body>
