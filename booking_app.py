@@ -3,6 +3,7 @@ from xhtml2pdf import pisa
 from io import BytesIO
 from datetime import datetime
 
+
 def generate_pdf(data):
     html_template = f"""
     <!DOCTYPE html>
@@ -17,7 +18,7 @@ def generate_pdf(data):
                 margin: 0;
                 padding: 0;
                 font-family: "Helvetica", Arial, sans-serif;
-                background-color: #F9FBFD; /* Soft background */
+                background-color: #F9FBFD;
                 color: #333;
             }}
             .container {{
@@ -27,39 +28,16 @@ def generate_pdf(data):
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 border-radius: 8px;
                 padding: 25px 30px;
+                page-break-inside: avoid;
             }}
-
-            /* HEADINGS */
             h1 {{
                 font-size: 28px;
                 font-weight: 700;
                 color: #2C3E50;
-                margin-bottom: 5px;
                 text-align: center;
+                margin-bottom: 5px;
                 letter-spacing: 1px;
             }}
-            .subheader {{
-                text-align: center;
-                color: #7F8C8D;
-                font-size: 16px;
-                margin-bottom: 20px;
-            }}
-            h2 {{
-                font-size: 18px;
-                color: #2C3E50;
-                margin: 16px 0 8px; /* tighten spacing */
-                position: relative;
-            }}
-            h2::after {{
-                content: "";
-                display: block;
-                width: 50px;
-                height: 2px;
-                background-color: #ADCBE3;
-                margin-top: 4px;
-            }}
-
-            /* TEXT */
             .welcome-text {{
                 text-align: center;
                 font-size: 16px;
@@ -70,8 +48,20 @@ def generate_pdf(data):
                 color: #3498DB;
                 font-weight: bold;
             }}
-
-            /* TABLES */
+            h2 {{
+                font-size: 18px;
+                color: #2C3E50;
+                margin: 16px 0 8px;
+                position: relative;
+            }}
+            h2::after {{
+                content: "";
+                display: block;
+                width: 50px;
+                height: 2px;
+                background-color: #ADCBE3;
+                margin-top: 4px;
+            }}
             table {{
                 width: 100%;
                 border-collapse: collapse;
@@ -89,31 +79,25 @@ def generate_pdf(data):
                 color: #555;
                 width: 30%;
             }}
-
-            /* NOTE */
             .note {{
-                background-color: #F0F4F8; 
+                background-color: #F0F4F8;
                 padding: 8px 10px;
                 border-left: 4px solid #3498DB;
-                margin: 10px 0 15px; 
+                margin: 10px 0 15px;
                 font-size: 14px;
-                color: #555; /* blend in more subtly */
+                color: #555;
             }}
-
-            /* FLEX WRAPPER for CONTACT & BANK sections side by side */
             .info-sections {{
                 display: flex;
-                flex-wrap: wrap;         /* wraps on smaller screens */
-                gap: 20px;               /* space between columns */
-                align-items: flex-start; /* top-align both sections */
-                margin-bottom: 10px;     /* small gap before footer */
+                flex-wrap: wrap;
+                gap: 20px;
+                align-items: flex-start;
+                margin-bottom: 10px;
             }}
             .info-section {{
-                flex: 1 1 350px;         /* each section at least 350px wide */
+                flex: 1 1 350px;
             }}
-
-            /* CONTACT & BANK DETAILS */
-            .contact-details p, 
+            .contact-details p,
             .bank-details p {{
                 margin: 4px 0;
             }}
@@ -123,18 +107,12 @@ def generate_pdf(data):
                 border-radius: 6px;
                 padding: 10px 12px;
             }}
-
-            /* FOOTER */
             .footer {{
                 text-align: center;
                 font-size: 12px;
                 color: #999;
-                margin-top: 5px; /* minimal space above footer */
+                margin-top: 5px;
             }}
-            .footer p {{
-                margin: 2px 0;  /* keep lines close together */
-            }}
-
             a {{
                 color: #3498DB;
                 text-decoration: none;
@@ -143,73 +121,39 @@ def generate_pdf(data):
     </head>
     <body>
         <div class="container">
-            <!-- TITLE & SUBHEADER -->
             <h1>Achillion Hotel</h1>
-        
-
-            <!-- WELCOME TEXT -->
             <p class="welcome-text">
                 <strong>Thank you for choosing <span class="highlight">Achillion Hotel</span>!</strong><br>
                 We look forward to welcoming you soon.
             </p>
 
-            <!-- GUEST DETAILS -->
             <h2>Guest Details</h2>
             <table>
-                <tr>
-                    <th>Guest Name</th>
-                    <td>{data['guest_name']}</td>
-                </tr>
-                <tr>
-                    <th>Room Type</th>
-                    <td>{data['room_type']}</td>
-                </tr>
-                <tr>
-                    <th>Number of Guests</th>
-                    <td>{data['guests']}</td>
-                </tr>
+                <tr><th>Guest Name</th><td>{data['guest_name']}</td></tr>
+                <tr><th>Room Type</th><td>{data['room_type']}</td></tr>
+                <tr><th>Number of Guests</th><td>{data['guests']}</td></tr>
             </table>
 
-            <!-- BOOKING DETAILS -->
             <h2>Booking Details</h2>
             <table>
-                <tr>
-                    <th>Check-In / Check-Out</th>
-                    <td>
-                        {data['check_in']} (15:00 - 23:00) &nbsp;—&nbsp;
-                        {data['check_out']} (08:00 - 11:00)
-                    </td>
-                </tr>
-                <tr>
-                    <th>Total Nights</th>
-                    <td>{data['nights']}</td>
-                </tr>
-                <tr>
-                    <th>Price (incl. Tax)</th>
-                    <td>{data['price']} €</td>
-                </tr>
-                <tr>
-                    <th>Environment Tax</th>
-                    <td>{data['environment_tax']} €</td>
-                </tr>
-                <tr>
-                    <th>Total Charge</th>
-                    <td>{data['total_charge']} €</td>
-                </tr>
-                <tr>
-                    <th>Payment Status</th>
-                    <td>{data['payment_status']}</td>
-                </tr>
+                <tr><th>Check-In / Check-Out</th><td>{data['check_in']} (15:00–23:00) &#8212; {data['check_out']} (08:00–11:00)</td></tr>
+                <tr><th>Total Nights</th><td>{data['nights']}</td></tr>
+                <tr><th>Price (incl. Tax)</th><td>{data['price']} €</td></tr>
+                <tr><th>Environment Tax</th><td>{data['environment_tax']} €</td></tr>
+                <tr><th>Total Charge</th><td>{data['total_charge']} €</td></tr>
+                <tr><th>Payment Status</th><td>{data['payment_status']}</td></tr>
             </table>
 
-            <!-- NOTE -->
             <div class="note">
                 <strong>Note:</strong> Please be informed that parking services are not available at the facility.
             </div>
 
-            <!-- CONTACT & BANK DETAILS SIDE-BY-SIDE -->
+            <h2>Terms & Conditions</h2>
+            <p>For complete terms and conditions, please visit our website: 
+               <a href="http://www.achillion-paralia.gr/terms">www.achillion-paralia.gr/terms</a>
+            </p>
+
             <div class="info-sections">
-                <!-- Hotel Contact Details -->
                 <div class="info-section">
                     <h2>Hotel Contact Details</h2>
                     <div class="contact-details">
@@ -220,8 +164,6 @@ def generate_pdf(data):
                         <p><strong>Website:</strong> <a href="http://www.achillion-paralia.gr">www.achillion-paralia.gr</a></p>
                     </div>
                 </div>
-
-                <!-- Bank Details -->
                 <div class="info-section">
                     <h2>Bank Details</h2>
                     <div class="bank-details">
@@ -232,12 +174,13 @@ def generate_pdf(data):
                 </div>
             </div>
 
-            <!-- FOOTER -->
+            <h2>Cancellation Policy</h2>
+            <p>There are no refunds for cancellations within <strong>14 days</strong> prior to arrival.</p>
+
             <div class="footer">
                 <p>Confirmed by: <strong>Kampouridis Dimitris</strong>, Hotel Manager</p>
                 <p>© 2025 Achillion Hotel - Apartments. All Rights Reserved.</p>
             </div>
-
         </div>
     </body>
     </html>
@@ -248,6 +191,7 @@ def generate_pdf(data):
     pisa.CreatePDF(html_template, dest=pdf_buffer)
     pdf_buffer.seek(0)
     return pdf_buffer
+
 
 if __name__ == "__main__":
     st.title("Achillion Hotel Booking Confirmation")
@@ -287,7 +231,6 @@ if __name__ == "__main__":
             }
             pdf_buffer = generate_pdf(data)
 
-            # Create filename using guest name and dates
             clean_guest_name = "".join(
                 c for c in guest_name if c.isalnum() or c.isspace()
             ).replace(" ", "_")
