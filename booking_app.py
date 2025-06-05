@@ -170,6 +170,7 @@ def generate_pdf(data):
                         <p><strong>Bank:</strong> Alpha Bank</p>
                         <p><strong>IBAN:</strong> GR5601408400840002002023605</p>
                         <p><strong>BIC:</strong> CRBAGRAA</p>
+                        <p><strong>Name:</strong> Kampouridis Dimitris</p>
                     </div>
                 </div>
             </div>
